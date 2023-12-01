@@ -1,0 +1,56 @@
+{% extends "project/layout.html" %}
+
+{% block body %}
+    <h2>Find the best Gym for you</h2>
+
+    <form action="{% url 'category' %}" method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <select name="category">
+          <option value="Fitdance">Fitdance</option>
+          <option value="nutricionista">Nutritionist</option>
+          <option value="arcondicionado">Air Conditioning</option>
+
+          <option value="horario">Work Time</option>
+          <option value="personal">Personal Trainer</option>
+          <option value="natação">Swimming</option>
+          <option value="pilates">Pilates</option>
+          <option value="Spinning">Spinning</option>
+          <option value="vestiario">Shower Bathroom</option>
+          <option value="estacionamento">Parking</option>
+          
+          
+        </select>
+
+        <input class="btn btn-primary" type="submit" value="FILTER">
+
+      </div>
+
+    </form>
+   
+  
+
+    <div class="row">
+    {% for i in allgym%}
+    
+    <div class="card" style="width: 18rem;">
+        <img src="{{i.imagem}}" class="card-img-top" alt="{{i.nome}}" height="200">
+        <div class="card-body">
+          <h5 class="card-title">{{i.nome}}</h5>
+          <p class="card-text">{{i.descricao}}</p>
+          <p class="card-text">{{i.endereco}}</p>
+          <a href="{% url 'detail' i.id %}" class="btn btn-primary">All details</a> <!-- no href voce sempre ira deixar linkado ao name da urls que deseja, em seguida voce precisa
+          voce estar colocando a variavel do looping "i". e a coluna neste caso o numero do personagem "id"-->
+        </div>
+      </div>   
+
+    {% endfor %}
+    </div>
+
+    
+{% endblock %}
+
+The default route of your web application should let users view all of the currently active auction listings.
+ For each active listing, this page should display (at minimum) the title, description, current price, and photo
+  (if one exists for the listing).

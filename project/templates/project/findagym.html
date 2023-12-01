@@ -1,0 +1,39 @@
+{% extends "project/layout.html" %}
+
+{% block body %}
+    <h2>Find the Closest Gym for you</h2>
+
+    <form action="{% url 'address' %}" method="post">
+      {% csrf_token %}
+
+      <div class="input-group flex-nowrap">
+        <span class="input-group-text" id="addon-wrapping">Street:</span>
+        <input type="text" name= "street" class="form-control" placeholder="type here.." aria-label="Username" aria-describedby="addon-wrapping">
+      </div>
+
+      <div class="input-group flex-nowrap">
+        <span class="input-group-text" id="addon-wrapping">City:</span>
+        <input type="text" name= "city" class="form-control" placeholder="type here.." aria-label="Username" aria-describedby="addon-wrapping">
+      </div>
+
+      <div class="input-group flex-nowrap">
+        <span class="input-group-text" id="addon-wrapping">Neighborhood:</span>
+        <input type="text" name= "neighborhood" class="form-control" placeholder="type here.." aria-label="Username" aria-describedby="addon-wrapping">
+      </div>
+
+      <div class="input-group flex-nowrap">
+        <span class="input-group-text" id="addon-wrapping">State:</span>
+        <input type="text" name = "state" class="form-control" placeholder="type here.." aria-label="Username" aria-describedby="addon-wrapping">
+      
+      </div>
+      
+
+      <input class="btn btn-primary" type="submit" value="Search">
+
+
+    </form>
+   
+
+    
+{% endblock %}
+

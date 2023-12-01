@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Map</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            var geocoder = new google.maps.Geocoder();
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: {lat: -34.397, lng: 150.644}
+            });
+
+            geocodeAddress(geocoder, map, "{{ address }}");
+
+            var nearbyGyms = JSON.parse('{{ nearby_gyms|safe }}');
+            nearbyGyms.forEach(function(gymAddress) {
+                geocodeAddress(geocoder, map, gymAddress);
+            });
+        }
+
+        function geocodeAddress(geocoder, map, address) {
+            geocoder.geocode({'address': address}, function(results, status) {
+                if (status === 'OK') {
+                    new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    console.error('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+    </script>
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs4NsQuy21I2Q5LCJ5fR6GiOQ3RX1nBS0&callback=initMap">
+    </script>
+</body>
+</html>

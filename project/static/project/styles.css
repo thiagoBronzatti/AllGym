@@ -1,0 +1,14 @@
+body {
+    padding: 10px;
+}
+
+.carousel {
+    border: 1px solid black;
+    width: 50%;
+}
+
+.carousel-item img {
+
+    height:300px;
+
+}
