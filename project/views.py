@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.db import IntegrityError
 from django.conf import settings
 import googlemaps
+import json
 
 from .models import User, GymDetail
 
@@ -112,10 +113,11 @@ def address(request):
         
         endereco = street+ " " +city + " " + neighborhood + " " + state
 
-        nearby_location = GymDetail.objects.all().values_list('endereco', flat=True)  # Fetching all addresses
-
+        nearby_locations = (GymDetail.objects.all().values('id', 'nome','endereco','descricao','imagem2','horario'))
+        nearby_gyms_json = json.dumps(list(nearby_locations))
 
         return render(request, "project/google.html", {
-                "address": endereco,
-                "nearby_gyms": nearby_location
-            })
+        "address": endereco,
+        "nearby_gyms": nearby_gyms_json,
+        "nearby_locations": nearby_locations
+    })

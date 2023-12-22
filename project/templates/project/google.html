@@ -1,49 +1,80 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Your Map</title>
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
+{% extends "project/layout.html" %}
+
+
+{% block body %}
+
     <div id="map"></div>
 
     <script>
         function initMap() {
             var geocoder = new google.maps.Geocoder();
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 12,
+                zoom: 15,
                 center: {lat: -34.397, lng: 150.644}
             });
 
-            geocodeAddress(geocoder, map, "{{ address }}");
+            geocodeAddress(geocoder, map, "{{ address }}",true);
 
             var nearbyGyms = JSON.parse('{{ nearby_gyms|safe }}');
+            console.log(nearbyGyms)
             nearbyGyms.forEach(function(gymAddress) {
-                geocodeAddress(geocoder, map, gymAddress);
+                geocodeAddress(geocoder, map, gymAddress.endereco,false, gymAddress.nome);
             });
         }
 
-        function geocodeAddress(geocoder, map, address) {
+        function geocodeAddress(geocoder, map, address, recenterMap, nome) {
+    
             geocoder.geocode({'address': address}, function(results, status) {
                 if (status === 'OK') {
-                    new google.maps.Marker({
+                    var location = results[0].geometry.location;
+                    var marker = new google.maps.Marker({
                         map: map,
                         position: results[0].geometry.location
                     });
+                    if (recenterMap) {
+                        map.setCenter(location);} // Define o centro do mapa para as coordenadas do lugar
+                        
+                        // Create info window content
+                    var infoWindowContent = '<div><strong>' + nome + '</strong><br>' + address + '</div>';
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: infoWindowContent
+                    });
+
+                // Add a click listener to the marker to show the info window
+                marker.addListener('click', function() {
+                    infoWindow.open(map, marker);
+                });
+                        
                 } else {
                     console.error('Geocode was not successful for the following reason: ' + status);
                 }
             });
         }
     </script>
-
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs4NsQuy21I2Q5LCJ5fR6GiOQ3RX1nBS0&callback=initMap">
     </script>
-</body>
-</html>
+
+    
+    <div class="row my-3">
+        
+    {% for i in nearby_locations%}
+    
+        <div class="card mx-1" style="width: 18%;">
+            <img src="{{i.imagem2}}" class="card-img-top" alt="{{i.nome}}" height="200">
+            <div class="card-body">
+            <h5 class="card-title">{{i.nome}}</h5>
+            <p class="card-text">{{i.descricao}}</p>
+            <p class="card-text">{{i.endereco}}</p>
+            <p class="card-text">{{i.horario}}</p>
+            <a href="{% url 'detail' i.id %}" class="btn btn-primary">All details</a> <!-- no href voce sempre ira deixar linkado ao name da urls que deseja, em seguida voce precisa
+            voce estar colocando a variavel do looping "i". e a coluna neste caso o numero do personagem "id"-->
+            </div>
+        </div>   
+
+    {% endfor %}
+    </div>
+    
+
+    {% endblock %}
+
